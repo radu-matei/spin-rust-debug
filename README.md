@@ -16,6 +16,32 @@ Pressing **F5** builds the component with debug information, starts Spin with
 
 ## How to use it
 
+### Dev container
+
+Install Docker, VS Code, and the **Dev Containers** extension. Open this
+project in VS Code and select **Dev Containers: Reopen in Container**. The
+container installs Rust, the `wasm32-wasip2` target, Spin, rust-analyzer, and
+CodeLLDB; it supports Linux amd64 and arm64 container hosts.
+
+To build and run without the debugger, use the container terminal:
+
+```sh
+spin build
+spin up
+```
+
+Port 3000 is forwarded to the host. For debugging, set a breakpoint in
+[src/lib.rs](src/lib.rs), select **Debug Rust component in Spin**, and press
+**F5**. Send `curl -i http://127.0.0.1:3107/` from the host or container
+terminal to hit it. Port 3107 is forwarded by VS Code.
+
+The container grants `SYS_PTRACE` and disables Docker's default seccomp
+profile so CodeLLDB can attach to Spin's HTTP worker. Use this development
+container only with trusted code. Running locally with `spin up` does not
+enforce Akamai Functions platform limits.
+
+### Local installation
+
 1. Install Spin, Rust 1.94 or newer, and the **CodeLLDB** VS Code extension.
    Add the WebAssembly target:
 
